@@ -279,6 +279,13 @@ services:
       targetMemoryPercent: 80
       targetCPUPercent: 80
     envVars:
+      # The worker service needs to wait for the history service to be up first,
+      # otherwise it will fail with "error starting scanner".
+      - key: DEPENDS_ON_HISTORY
+        fromService:
+          name: temporal-history
+          type: pserv
+          envVarKey: SERVICES
       - key: SERVICES
         value: worker
       - key: RENDER_FRONTEND_HOST
