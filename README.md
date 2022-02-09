@@ -96,6 +96,14 @@ scaling:
 ![app-worker-logs](./assets/worker-logs.png)
 7. To check that the workflow has been run successfully, click on the `temporal-web` service, and go to its URL. Under the `default` namespace, you should find your workflow's run with the status "Completed".
 
+# Troubleshooting
+
+- When deploying for the first time, if the blueprint sync hangs more than 10 minutes waiting for the `temporal-elasticsearch` service, simply trigger a "Manual Sync" in the top right.
+- To use `tctl`, the Temporal CLI, with `render.with_scaling.yaml`, use the web shell of one of the temporal-frontend|matching|history|worker services, and run:
+    ```
+    $ export TEMPORAL_CLI_ADDRESS=$RENDER_FRONTEND_HOST:7233
+    $ tctl cluster health
+    ```
 
 # Acknowledgements
 
