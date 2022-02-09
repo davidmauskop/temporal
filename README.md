@@ -99,7 +99,11 @@ scaling:
 # Troubleshooting
 
 - When deploying for the first time, if the blueprint sync hangs more than 10 minutes waiting for the `temporal-elasticsearch` service, simply trigger a "Manual Sync" in the top right.
-- When using `render.with_scaling.yaml`, note that the Temporal CLI `tctl` works on `temporal-matching`, `temporal-history`, and `temporal-worker`, but not on `temporal-frontend`.
+- To use `tctl`, the Temporal CLI, with `render.with_scaling.yaml`, use the web shell of one of the temporal-frontend|matching|history|worker services, and run:
+    ```
+    $ export TEMPORAL_CLI_ADDRESS=$RENDER_FRONTEND_HOST:7233
+    $ tctl cluster health
+    ```
 
 # Acknowledgements
 

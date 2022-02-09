@@ -9,24 +9,21 @@ databases:
     plan: standard
 
 services:
-  - type: web
+  - type: pserv
     name: temporal-all
     autoDeploy: false
     plan: Standard
     env: docker
     dockerfilePath: ./temporal-cluster/server/auto-setup/Dockerfile
     envVars:
-      - key: FRONTEND_GRPC_PORT
-        value: 10000
       - key: SERVICES
         value: frontend,matching,history,worker
       - key: DYNAMIC_CONFIG_FILE_PATH
         value: /etc/temporal/dynamicconfig.yaml
-      - key: TEMPORAL_CLI_ADDRESS
-        fromService:
-          name: temporal-all
-          type: web
-          property: hostport
+      - key: BIND_ON_IP
+        value: 0.0.0.0
+      - key: TEMPORAL_BROADCAST_ADDRESS
+        value: 0.0.0.0
       - key: SKIP_POSTGRES_DB_CREATION
         value: true
       - key: DB
@@ -82,30 +79,30 @@ services:
         value: 8088
       - key: TEMPORAL_PERMIT_WRITE_API
         value: true
-      - key: TEMPORAL_GRPC_ENDPOINT
+      - key: TEMPORAL_GRPC_HOST
         fromService:
           name: temporal-all
-          type: web
-          property: hostport
+          type: pserv
+          property: host
   - type: web
     name: app-workflow-trigger
     env: go
     buildCommand: go build start/main.go
     startCommand: ./main
     envVars:
-      - key: TEMPORAL_CLUSTER_HOSTPORT
+      - key: TEMPORAL_CLUSTER_HOST
         fromService:
           name: temporal-all
-          type: web
-          property: hostport
+          type: pserv
+          property: host
   - type: worker
     name: app-worker
     env: go
     buildCommand: go build worker/main.go
     startCommand: ./main
     envVars:
-      - key: TEMPORAL_CLUSTER_HOSTPORT
+      - key: TEMPORAL_CLUSTER_HOST
         fromService:
           name: temporal-all
-          type: web
-          property: hostport
+          type: pserv
+          property: host
