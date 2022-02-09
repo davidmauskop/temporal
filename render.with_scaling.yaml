@@ -34,7 +34,7 @@ services:
         value: 128mb
       - key: discovery.type
         value: single-node
-  - type: web
+  - type: pserv
     name: temporal-frontend
     autoDeploy: false
     plan: Standard
@@ -46,18 +46,16 @@ services:
       targetMemoryPercent: 80
       targetCPUPercent: 80
     envVars:
-      - key: FRONTEND_GRPC_PORT
-        value: 10000
       - key: SERVICES
         value: frontend
       - key: DYNAMIC_CONFIG_FILE_PATH
         # value: /etc/temporal/dynamicconfig.yaml
         value: /etc/temporal/dynamicconfig_es.yaml # Use this if deploying with ElasticSearch
-      - key: TEMPORAL_CLI_ADDRESS
+      - key: RENDER_FRONTEND_HOST
         fromService:
           name: temporal-frontend
-          type: web
-          property: hostport
+          type: pserv
+          property: host
       - key: ENABLE_ES
         value: true
       - key: ES_VERSION
@@ -132,11 +130,11 @@ services:
     envVars:
       - key: SERVICES
         value: history
-      - key: PUBLIC_FRONTEND_ADDRESS
+      - key: RENDER_FRONTEND_HOST
         fromService:
           name: temporal-frontend
-          type: web
-          property: hostport
+          type: pserv
+          property: host
       - key: DYNAMIC_CONFIG_FILE_PATH
         # value: /etc/temporal/dynamicconfig.yaml
         value: /etc/temporal/dynamicconfig_es.yaml # Use this if deploying with ElasticSearch
@@ -208,11 +206,11 @@ services:
     envVars:
       - key: SERVICES
         value: matching
-      - key: PUBLIC_FRONTEND_ADDRESS
+      - key: RENDER_FRONTEND_HOST
         fromService:
           name: temporal-frontend
-          type: web
-          property: hostport
+          type: pserv
+          property: host
       - key: DYNAMIC_CONFIG_FILE_PATH
         # value: /etc/temporal/dynamicconfig.yaml
         value: /etc/temporal/dynamicconfig_es.yaml # Use this if deploying with ElasticSearch
@@ -283,11 +281,11 @@ services:
     envVars:
       - key: SERVICES
         value: worker
-      - key: PUBLIC_FRONTEND_ADDRESS
+      - key: RENDER_FRONTEND_HOST
         fromService:
           name: temporal-frontend
-          type: web
-          property: hostport
+          type: pserv
+          property: host
       - key: DYNAMIC_CONFIG_FILE_PATH
         # value: /etc/temporal/dynamicconfig.yaml
         value: /etc/temporal/dynamicconfig_es.yaml # Use this if deploying with ElasticSearch
@@ -356,30 +354,30 @@ services:
         value: 8088
       - key: TEMPORAL_PERMIT_WRITE_API
         value: true
-      - key: TEMPORAL_GRPC_ENDPOINT
+      - key: TEMPORAL_GRPC_HOST
         fromService:
           name: temporal-frontend
-          type: web
-          property: hostport
+          type: pserv
+          property: host
   - type: web
     name: app-workflow-trigger
     env: go
     buildCommand: go build start/main.go
     startCommand: ./main
     envVars:
-      - key: TEMPORAL_CLUSTER_HOSTPORT
+      - key: TEMPORAL_CLUSTER_HOST
         fromService:
           name: temporal-frontend
-          type: web
-          property: hostport
+          type: pserv
+          property: host
   - type: worker
     name: app-worker
     env: go
     buildCommand: go build worker/main.go
     startCommand: ./main
     envVars:
-      - key: TEMPORAL_CLUSTER_HOSTPORT
+      - key: TEMPORAL_CLUSTER_HOST
         fromService:
           name: temporal-frontend
-          type: web
-          property: hostport
+          type: pserv
+          property: host
