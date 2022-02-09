@@ -99,4 +99,6 @@ scaling:
 
 # Acknowledgements
 
-[auto-setup-override.sh](temporal-cluster/server/auto-setup/auto-setup-override.sh) is based on Temporal's [auto-setup.sh script](https://github.com/temporalio/temporal/blob/077d39c775/docker/auto-setup.sh), with some modifications made to better accommodate Render's architecture.
+We've made modifications to these scripts to better accommodate Render's architecture:
+- [auto-setup-override.sh](temporal-cluster/server/auto-setup/auto-setup-override.sh) is based on Temporal's [auto-setup.sh script](https://github.com/temporalio/temporal/blob/077d39c775/docker/auto-setup.sh).
+- [entrypoint-override.sh](temporal-cluster/server/entrypoint_override.sh) is based on Temporal's [entrypoint.sh script](https://github.com/temporalio/temporal/blob/077d39c775/docker/entrypoint.sh).
